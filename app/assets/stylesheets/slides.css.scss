@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body, html {
-  padding: 0px;
+  padding: 10px;
   margin: 0px;
   width: 100%;
   height: 100%;
@@ -12,6 +12,7 @@ body, html {
 #application-container {
   margin: auto;
   margin-top: 30px;
+
   border: black 1px solid;
   border-radius: 5px;
   width: 80%;
@@ -40,7 +41,7 @@ body, html {
         display: block;
 
         input {
-        width: 80%;
+          width: 80%;
         }
         button {
           display: block;
@@ -59,10 +60,23 @@ body, html {
 
       .content {
         margin-top: 30px;
+        p, ul {
+          font-size: 20px;
+          line-height: 2;
+        }
+        li {
+          list-style: none;
+        }
+        ul ul {
+          li {
+            font-size: 15px;
+            line-height: 1.4;
+            list-style: disc;
+            margin-left: 30px;
+          }
+        }
       }
-
     }
-
   }
 
   &.editable {

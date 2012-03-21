@@ -1,7 +1,15 @@
 $(function () {
 
+
+  //////////////////////////////////
+  //        NAMESPACE           //
+  ////////////////////////////////
   var App = {};
 
+
+  //////////////////////////////////
+  //        ROUTER              //
+  /////////////////////////////////
   App.Router = Backbone.Router.extend({
 
     routes: {
@@ -43,6 +51,9 @@ $(function () {
 
   });
 
+  //////////////////////////////////
+  //        SLIDE MODEL          //
+  /////////////////////////////////
   App.Slide = Backbone.Model.extend({
     url: function () {
       var path = '/slides';
@@ -53,12 +64,19 @@ $(function () {
     }
   });
 
+
+  //////////////////////////////////
+  //        SLIDE COLLECTION  //
+  /////////////////////////////////
   App.Slides = Backbone.Collection.extend({
     url: '/slides',
     model: App.Slide
 
   });
 
+  //////////////////////////////////
+  //        SLIDE VIEW        //
+  /////////////////////////////////
   App.SlideView = Backbone.View.extend({
 
     className: 'slide',
@@ -113,6 +131,9 @@ $(function () {
 
   });
 
+  //////////////////////////////////
+  //        SLIDES VIEW     //
+  /////////////////////////////////
   App.SlidesView = Backbone.View.extend({
 
     events: {
@@ -167,7 +188,7 @@ $(function () {
           var slideView = new App.SlideView({model: this.currentSlide, editable: this.editable});
           this.$('#slide-container').html(slideView.render().el);
           this.currentSlideView = slideView;
-          this.currentSlideView.bind('saved',this.turnOffEditable)
+          this.currentSlideView.bind('saved', this.turnOffEditable)
         }
       }
     },
@@ -210,6 +231,9 @@ $(function () {
     }
   });
 
+  //////////////////////////////////
+  //        APP INIT            //
+  /////////////////////////////////
   var router = new App.Router;
   Backbone.history.start();
 
