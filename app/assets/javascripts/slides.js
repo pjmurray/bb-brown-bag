@@ -5,24 +5,38 @@ $(function () {
   App.Router = Backbone.Router.extend({
 
     routes: {
-      'test': 'showSlide'
+      '': 'bootstrap',
+      ':id': 'showSlide'
     },
 
-    showSlide: function () {
+
+    bootstrap: function (index) {
       var collection = new App.Slides([
-        {heading: "Slide 1", content: "hello"},
-        {heading: "Slide 2", content: "hello"}
       ]);
-      var view = new App.SlidesView({collection: collection});
-      $('#application-container').html(view.render().el);
+      this.view = new App.SlidesView({collection: collection, slide: index});
+      $('#application-container').html(this.view.el);
+    },
+
+    showSlide: function (index) {
+      if (this.view === undefined) {
+        this.bootstrap();
+      } else {
+        this.view.showSlide(index);
+        this.navigate('' + index);
+      }
     }
+
+
   });
 
   App.Slide = Backbone.Model.extend({
+    url: '/slides'
   });
 
   App.Slides = Backbone.Collection.extend({
+    url: '/slides',
     model: App.Slide
+
   });
 
   App.SlideView = Backbone.View.extend({
@@ -56,14 +70,28 @@ $(function () {
       if (this.options.slide) {
         index = this.options.slide;
       }
-      this.currentSlide = this.collection.models[index];
+      var that = this;
+      this.collection.fetch({success: function () {
+        that.showSlide(index);
+      }})
     },
 
     render: function () {
+      return this;
+    },
+
+    showSlide: function (index) {
+      this.currentSlide = this.collection.at(index);
+      if (this.currentSlide === undefined) {
+        throw "no slide exists for index: " + index
+      }
+      if (this.currentSlideView) {
+        this.currentSlideView.remove();
+      }
       var slideView = new App.SlideView({model: this.currentSlide});
       this.$el.html(slideView.render().el);
       this.currentSlideView = slideView;
-      return this;
+
     },
 
     slideIndex: function () {
@@ -71,37 +99,21 @@ $(function () {
     },
 
     moveSlide: function (e) {
-      var newView;
       var index = this.slideIndex();
+      var newIndex;
       if (e.keyCode === this.arrows.right && index < this.collection.length) {
 
-        newSlide = this.collection.at(index + 1);
+        newIndex = (index + 1);
       } else if (e.keyCode === this.arrows.left && index > 0) {
-        newSlide = this.collection.at(index - 1);
+        newIndex = (index - 1);
       }
-      if (newSlide) {
-        this.replaceSlide(newSlide);
+      if (newIndex) {
+        router.showSlide(newIndex);
       }
-    },
-
-    replaceSlide: function (newSlide) {
-      this.currentSlide = newSlide;
-      this.currentSlideView.remove();
-      this.render();
     }
   });
 
-  var app = {
-    models: {},
-    views: {},
-    controllers: {},
-    init: function () {
-      new App.Router;
-      Backbone.history.start();
-    }
-  };
-
-  app.init();
-
+  var router = new App.Router;
+  Backbone.history.start();
 
 });

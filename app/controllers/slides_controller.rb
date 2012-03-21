@@ -3,7 +3,9 @@ class SlidesController < ApplicationController
   # GET /slides.json
   def index
     @slides = Slide.all
-
+    p "OH HEY"
+    p @slides
+    p @slides.to_json
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @slides }
