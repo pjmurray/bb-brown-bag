@@ -3,9 +3,6 @@ class SlidesController < ApplicationController
   # GET /slides.json
   def index
     @slides = Slide.all
-    p "OH HEY"
-    p @slides
-    p @slides.to_json
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @slides }
@@ -63,7 +60,7 @@ class SlidesController < ApplicationController
     respond_to do |format|
       if @slide.update_attributes(params[:slide])
         format.html { redirect_to @slide, notice: 'Slide was successfully updated.' }
-        format.json { head :ok }
+        format.json { render json: @slide }
       else
         format.html { render action: "edit" }
         format.json { render json: @slide.errors, status: :unprocessable_entity }
